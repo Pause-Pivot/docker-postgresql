@@ -1,0 +1,42 @@
+version: '3.8'
+services:
+  postgres_server:
+    image: postgres:14.4
+    container_name: ${POSTGRES_CONTAINER_NAME}
+    env_file:
+      - .env
+    volumes:
+      - ./data/Postgresql_14.4/:/var/lib/postgresql/data
+      # - ./my_custom_postgresql.conf:/var/lib/postgresql/data/postgresql.conf
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    
+    restart: unless-stopped
+    
+    networks:
+      - docker-postgres
+
+  pgadmin:
+    container_name: ${PGAADMIN_CONTAINER_NAME}
+    image: dpage/pgadmin4
+    env_file:
+      - .env
+    volumes:
+       - ./data/pgAdmin/:/var/lib/pgadmin
+    ports:
+      - "${PGADMIN_PORT}:80"
+    networks:
+      - docker-postgres
+    
+    restart: unless-stopped
+    
+    depends_on:
+      - postgres_server
+
+networks:
+  docker-postgres:
+    driver: bridge
+
+volumes:
+    postgres:
+    pgadmin:
