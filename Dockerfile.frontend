@@ -1,0 +1,8 @@
+FROM node:18.17.0-alpine3.18 as NODE_18_17_0
+WORKDIR /app
+COPY package*.json ./
+COPY . .
+RUN npm install update-browserslist-db@latest -g
+RUN npm install
+EXPOSE 4200
+CMD ["npm", "run", "start"]
